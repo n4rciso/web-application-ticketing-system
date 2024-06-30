@@ -1,0 +1,341 @@
+# CHECK THE GET /api/tickets ENDPOINT
+## Retrieve all tickets (all)
+GET http://localhost:3001/api/tickets HTTP/1.1
+### 200
+
+
+
+# CHECK THE GET api/tickets/id ENDPOINT
+## Retrieve all blocks of a tickets specifing its ID.
+### Try without authentication
+DELETE http://localhost:3001/api/sessions/current HTTP/1.1
+###
+GET http://localhost:3001/api/tickets/1 HTTP/1.1
+### --> 401 Unauthorized
+
+### Try with authentication (admin or normal user)
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Narciso",
+  "password": "PaSs1234"
+}
+### Use the ID of a ticket that exists in your database
+GET http://localhost:3001/api/tickets/1 HTTP/1.1
+### --> 200
+### Use the ID of a ticket that does not exist in your database
+GET http://localhost:3001/api/tickets/999 HTTP/1.1
+### --> 404 Ticket non found
+
+
+
+
+# CHECK THE POST api/tickets/id/answers ENDPOINT
+## Retrieve all answers of a specific ticket specifing its ID.
+### Try without authentication
+DELETE http://localhost:3001/api/sessions/current HTTP/1.1
+### 
+POST http://localhost:3001/api/tickets/1/answer HTTP/1.1
+Content-Type: application/json
+
+{
+  "content": "Your point is right! We will add this feature in the next release."
+}
+### --> 401 Unauthorized
+
+### Try with authentication (admin or normal user)
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Narciso",
+  "password": "PaSs1234"
+}
+### Use the ID of a ticket that does not exists in your database
+POST http://localhost:3001/api/tickets/99/answer HTTP/1.1
+Content-Type: application/json
+
+{
+  "content": "Your point is right! We will add this feature in the next release."
+}
+### --> 404 Ticket non found
+### Use the ID of a ticket that exists in your database
+POST http://localhost:3001/api/tickets/1/answer HTTP/1.1
+Content-Type: application/json
+
+{
+  "content": "Your point is right! We will add this feature in the next release."
+}
+### --> 200
+### Use the ID of a ticket that exists in your database, but is closed
+POST http://localhost:3001/api/tickets/3/answer HTTP/1.1
+Content-Type: application/json
+
+{
+  "content": "Your point is right! We will add this feature in the next release."
+}
+### --> 422 Not is possible to answer to a closed ticket
+### Use the ID of a ticket that exists in your database, but the content is empty
+POST http://localhost:3001/api/tickets/3/answer HTTP/1.1
+Content-Type: application/json
+
+{
+  "content": ""
+}
+### --> 422 Content must be a non-empty string
+
+
+
+
+
+# CHECK THE PUT api/tickets/id/state ENDPOINT
+## Update a specific tickets state specifing its ID. 
+### Try without authentication
+DELETE http://localhost:3001/api/sessions/current HTTP/1.1
+###
+PUT http://localhost:3001/api/tickets/1/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 1,
+    "state": "closed"
+}
+### --> 401 Unauthorized
+### Try with authentication admin
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Narciso",
+  "password": "PaSs1234"
+}
+### Use the ID of a ticket that exists in your database
+PUT http://localhost:3001/api/tickets/1/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 3,
+    "state": "closed"
+}
+### --> 200
+### Use the ID of a ticket that does not exist in your database
+PUT http://localhost:3001/api/tickets/99/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 3,
+    "state": "closed"
+}
+### --> 404 Ticket non found
+### Use the ID of a ticket that exists but is closed
+PUT http://localhost:3001/api/tickets/2/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 2,
+    "state": "open"
+}
+### --> 200 (as the user is an admin)
+##### This demonstrates that the state of a ticket can be changed from closed to open by the admin
+### Try with authentication user
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "TheHero",
+  "password": "HeRo4567"
+}
+### Use the ID of a ticket that exists but isn't yours
+PUT http://localhost:3001/api/tickets/1/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 1,
+    "state": "closed"
+}
+### --> 401 Not authorized (only admin or owner)
+### Use the ID of a ticket that exists, is yours and open
+PUT http://localhost:3001/api/tickets/6/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 1,
+    "state": "closed"
+}
+### --> 200
+### Use the ID of a ticket that exists, is yours and closed
+PUT http://localhost:3001/api/tickets/6/state HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 1,
+    "state": "open"
+}
+### --> 401 Not authorized (owner could only change the state of a ticket from open to closed)
+
+
+
+
+
+# CHECK THE PUT api/tickets/id/category ENDPOINT
+## Update a specific tickets category specifing its ID.
+### Try without authentication
+DELETE http://localhost:3001/api/sessions/current HTTP/1.1
+###
+PUT http://localhost:3001/api/tickets/1/category HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 1,
+    "category": "inquiry"
+}
+### --> 401 Unauthorized
+### Try without authenticated user (not admin)
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "TheHero",
+  "password": "HeRo4567"
+}
+### Use the ID of a ticket that exists in your database
+PUT http://localhost:3001/api/tickets/1/category HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 1,
+    "category": "inquiry"
+}
+### --> 401 Not authorized (only admin)
+### Try with authentication admin
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Narciso",
+  "password": "PaSs1234"
+}
+### Use the ID of a ticket that exists in your database
+PUT http://localhost:3001/api/tickets/1/category HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 3,
+    "category": "inquiry"
+}
+### --> 200
+### Use the ID of a ticket that does not exist in your database
+PUT http://localhost:3001/api/tickets/99/category HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 3,
+    "category": "inquiry"
+}
+### --> 404 Ticket non found
+
+
+
+
+
+
+
+# CHECK THE POST api/tickets ENDPOINT
+## Create a specific tickets
+### Try without authentication
+DELETE http://localhost:3001/api/sessions/current HTTP/1.1
+###
+POST http://localhost:3001/api/tickets HTTP/1.1
+Content-Type: application/json  
+
+{
+    "title": "Night mode",
+    "category": "new feature",
+    "description": "Please add a night mode to the application."
+}
+### --> 401 Not authorized
+### Try with authentication (admin or normal user)
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Narciso",
+  "password": "PaSs1234"
+}
+### Create a specific tickets
+POST http://localhost:3001/api/tickets HTTP/1.1
+Content-Type: application/json  
+
+{
+    "title": "Night mode",
+    "category": "new feature",
+    "description": "Please add a night mode to the application."
+}
+### --> 200
+### Create a specific tickets with empty title
+POST http://localhost:3001/api/tickets HTTP/1.1
+Content-Type: application/json  
+
+{
+    "title": "",
+    "category": "new feature",
+    "description": "Please add a night mode to the application."
+}
+### --> 422 Title must be a non-empty string
+### Create a specific tickets with empty category
+POST http://localhost:3001/api/tickets HTTP/1.1
+Content-Type: application/json  
+
+{
+    "title": "Night mode",
+    "category": "",
+    "description": "Please add a night mode to the application."
+}
+### --> 422 Invalid value
+### Create a specific tickets with empty description
+POST http://localhost:3001/api/tickets HTTP/1.1
+Content-Type: application/json  
+
+{
+    "title": "Night mode",
+    "category": "new feature",
+    "description": ""
+}
+### --> 422 Description must be a non-empty string
+
+
+### Try without authentication
+DELETE http://localhost:3001/api/sessions/current HTTP/1.1
+###
+POST http://localhost:3001/api/tickets HTTP/1.1
+Content-Type: application/json  
+
+{
+    "title": "Night mode",
+    "category": "new feature",
+    "description": "Please add a night mode to the application."
+}
+### --> 401 Not authorized
+### Try with authentication (normal user)
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "TheHero",
+  "password": "HeRo4567"
+}
+### Get a valid token
+GET http://localhost:3001/api/auth-token HTTP/1.1
+### 200
+### Try with authentication (admin or normal user)
+POST http://localhost:3001/api/sessions HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "Narciso",
+  "password": "PaSs1234"
+}
+### Get a valid token
+GET http://localhost:3001/api/auth-token HTTP/1.1
+### 200
