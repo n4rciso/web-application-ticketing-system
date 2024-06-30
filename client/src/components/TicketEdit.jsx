@@ -1,18 +1,15 @@
 /**
- * Questa sezione è visisibile solo a admin o utenti che sono owner del ticket
+ * This section is visible only to admins or users who are owners of the ticket
  */
 
 
 import React, { useState } from 'react';
 import { Form, Button, Alert, ButtonGroup, Container} from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Assicurati di importare Link da react-router-dom
 
 const TicketEdit = (props) => {
     const [state, setState] = useState(props.ticketData.state);
     const [category, setCategory] = useState(props.ticketData.category);
     const [errorMsg, setErrorMsg] = useState(''); // This state is used to display error messages in the form.
-
-    const toggleState = () => {setState(state === 'open' ? 'closed' : 'open'); };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -25,18 +22,15 @@ const TicketEdit = (props) => {
             setErrorMsg('Category must be inquiry, maintenance, new feature, administrative or payment');
         }
         else {
-            setErrorMsg(''); // Pulisce eventuali messaggi di errore precedenti
+            setErrorMsg('');
             try {
-                // Aggiorna lo stato del ticket
                 const updatedTicketState = { ...props.ticketData, state: state };
                 await props.updateStateTicket(updatedTicketState);
 
-                // Aggiorna la categoria del ticket
                 const updatedTicketCategory = { ...updatedTicketState, category: category };
                 await props.updateCategoryTicket(updatedTicketCategory);
 
             } catch (error) {
-                // Gestisce eventuali errori nelle chiamate asincrone
                 setErrorMsg('Failed to update ticket. Please try again.');
             }
         }

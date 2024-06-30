@@ -1,7 +1,7 @@
 
 import { Row, Col, Button, Alert} from 'react-bootstrap';
-import { Outlet, Link, useParams, Navigate } from 'react-router-dom';
-import { React, useState, useEffect } from 'react';
+import { Outlet, Link } from 'react-router-dom';
+import { React, useEffect } from 'react';
 import { TicketList } from './TicketLibrary';
 import { Navigation } from './Navigation';
 import { LoginForm } from './Auth';
@@ -39,7 +39,7 @@ function AddLayout(props) {
   );
 }
 
-// Layout di tutti i ticket
+
 function TableLayout(props) {
 
   useEffect(() => {

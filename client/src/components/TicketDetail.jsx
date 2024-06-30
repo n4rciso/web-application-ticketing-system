@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ListGroup, Form, Button, Container, Alert} from 'react-bootstrap';
 import API from '../API.js';
-import dayjs from 'dayjs';
 
 const TicketDetail = ({ ticketId, dirty, setDirty}) => {
   const [ticketDetails, setTicketDetails] = useState(null);

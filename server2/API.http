@@ -1,3 +1,7 @@
+# Note that the token is valid for 1 minute so to perform this test you need to get a
+# new token uncommenting the line in the index.js file and use it in the Authorization header
+
+
 ## Valid token with administrator access
 POST http://localhost:3002/api/ticket/estimation HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJhZG1pbiIsImF1dGhJZCI6MSwiaWF0IjoxNzE5NTY3OTIyLCJleHAiOjE3MTk1Njc5ODJ9.3hRqlwhE8kve3wVVTPKx5pyxWXlca9kmWCrW5t6PuZE

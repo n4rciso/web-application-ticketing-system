@@ -14,7 +14,7 @@ const jsonwebtoken = require('jsonwebtoken');
 
 
 //FOR DEBUGGING ONLY:to do test with API.http
-/*const expireTime = 10; //seconds
+/*const expireTime = 60; //seconds
 const token_admin = jsonwebtoken.sign( { access: 'admin', authId: 1 }, jwtSecret, {expiresIn: expireTime});
 const token_basic = jsonwebtoken.sign( { access: 'basic', authId: 2 }, jwtSecret, {expiresIn: expireTime});
 console.log(token_admin,token_basic);
@@ -66,17 +66,17 @@ app.post('/api/ticket/estimation',
       return res.status(400).json({errors: errList});
     }
 
-    // Calcolo della stima del tempo
+    // Calculating the time estimate    
     const { title, category } = req.body;
-    const totalChars = (title.replace(/\s+/g, '') + category.replace(/\s+/g, '')).length; // Rimuove gli spazi e calcola la lunghezza totale
+    const totalChars = (title.replace(/\s+/g, '') + category.replace(/\s+/g, '')).length; // Remove spaces and calculate total length
     const estimationHours = (totalChars * 10) + parseInt(Math.round(Math.random() * 239 +1));
 
-    // Verifica del livello di accesso dell'utente
+    // Check the user's access level
     const authLevel = req.auth.access;
     if (authLevel === 'admin') {
-      res.json({ estimation: estimationHours }); // Stima in ore per gli amministratori
+      res.json({ estimation: estimationHours }); // Estimate in hours for administrators
     } else {
-      const estimationDays = parseInt(Math.round(estimationHours / 24)); // Stima in giorni per gli utenti normali
+      const estimationDays = parseInt(Math.round(estimationHours / 24)); // Estimate in days for normal users
       res.json({ estimation: estimationDays });
     }
 });

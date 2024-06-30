@@ -11,7 +11,6 @@ const TicketForm = (props) => {
   const [description, setDescription] = useState('');
   const [estimation, setEstimation] = useState();
   const [confirmation, setConfirmation] = useState(false);
-  //const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     const aysincEst = async () => {
@@ -24,7 +23,6 @@ const TicketForm = (props) => {
           } else {
             setEstimation(`${estimateResult.estimation} days`);
           }
-          console.log("HO CALCOLATO LA STIMA", estimateResult);
         } catch (error) {
           console.log('Error fetching estimation due to token expiration');
           //props.setMessage('Token expire and be refreshed');

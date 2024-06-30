@@ -1,8 +1,7 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import { Navbar, Nav, Form, Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Assicurati di importare Link da react-router-dom
-import { NavLink } from 'react-router-dom'; // Assicurati di avere React Router se usi NavLink
+import { Navbar, Nav, Form, Container} from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 import { LoginButton, LogoutButton } from './Auth';
 
 const Navigation = (props) => {
@@ -42,12 +41,3 @@ const Navigation = (props) => {
 }
 
 export { Navigation };
-/*
-                {props.user && (
-                            <Link to={'/add'} className="nav-link">
-                                <Button variant="outline-light" className="d-flex align-items-center">
-                                    <i className="bi bi-plus-lg me-2"></i> Crea un nuovo ticket
-                                </Button>
-                            </Link>
-                        )}
-                            */

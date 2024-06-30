@@ -2,17 +2,23 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
 
-import dayjs from 'dayjs';
-
 import { React, useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, Outlet, Link, useParams, Navigate, useNavigate } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import API from './API.js';
 import { GenericLayout, NotFoundLayout, TableLayout, LoginLayout, AddLayout } from './components/Layout';
-import { faHouseMedicalCircleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { Tiktok } from 'react-bootstrap-icons';
 
 
+/**
+ * The App component is the main component of the application.
+ * It contains the main structure of the application and the main states.
+ * The App component is composed of the following components:
+ * - GenericLayout: the main layout of the application
+ * - NotFoundLayout: the layout for the 404 page
+ * - TableLayout: the layout for the main page of the application
+ * - LoginLayout: the layout for the login page
+ * - AddLayout: the layout for the add ticket page
+ */
 function App() {
   return (
     <BrowserRouter>
@@ -30,7 +36,7 @@ function AppWithRouter() {
   const [loggedIn, setLoggedIn] = useState(false);   // This state keeps track if the user is currently logged-in.
   const [user, setUser] = useState(null);   // This state contains the user's info.
   const [authToken, setAuthToken] = useState(undefined);  // This state contains the user's auth token.
-  const [tokenIsExpired, setTokenIsExpired] = useState(false);  
+  const [tokenIsExpired, setTokenIsExpired] = useState(false);
 
 
   /*** Error handler ***/
@@ -60,7 +66,9 @@ function AppWithRouter() {
 
   /**
    * On component mount, checks if the user is already authenticated:
-   *  - if the user is authenticated, it sets the user info and the login state accordingly
+   *  - if the user is authenticated:
+   *      - it sets the user info and the login state accordingly
+   *      - it triggers the token generation
    *  - if the user is not authenticated, it does nothing
    */
   useEffect(() => {
@@ -102,9 +110,9 @@ function AppWithRouter() {
           console.log("Error: renewToken error ", err);
         }
       }
-    }  
+    }
     updateAuthToken();
-  }, [tokenIsExpired]); 
+  }, [tokenIsExpired]);
 
 
   /**
@@ -146,7 +154,10 @@ function AppWithRouter() {
   /**
    * I decided to manage in this section only the handlers relating to the main page therefore:
    *   - adding a new ticket
-   *   - modification of one of the main characteristics of the tickets (no blocks) that all can see
+   *   - updating the state of a ticket
+   *   - updating the category of a ticket
+   *   - answering a ticket
+   *   - handling the estimation of a ticket
    */
 
   /**
@@ -162,8 +173,8 @@ function AppWithRouter() {
   }
 
   /** 
- * This function is used to update the state of a ticket
- */
+   * This function is used to update the state of a ticket
+   */
   async function updateStateTicket(ticket) {
     try {
       await API.updateStateTicket(ticket);
@@ -186,8 +197,6 @@ function AppWithRouter() {
   }
 
 
-
-  // QUESTO VUOL DIRE CHE QUANDO RISPONDO A UN TICKET TUTTI VENGONO RICARICATI
   /**
    * After successfully answering a ticket, mark the data as dirty and navigate to the homepage
    */
@@ -198,25 +207,33 @@ function AppWithRouter() {
   }
 
 
-/**
- * This function is used to handel the estimation of the ticket.
- *  1. Try to get the estimate with the current token
- *  2. If the estimate is received, return it
- *  3. If the estimate is not received, try to renew the token
- *  4. Get the estimate with the new token 
- */
-async function handleEstimation(ticket) {
-  try {
-    //console.log("DEBUG: HandleEstimation with token", authToken, "and ticket");
-    const estimation = await API.getEstimation(authToken, ticket);
-    //console.log("DEBUG: The estimation ", estimation, "was received");
-    return estimation;
-  } catch (err) {
-    setTokenIsExpired(true);
-    console.log("DEBUG: The token",authToken,"is expired", err);
-    return null;
+  /**
+   * This function is used to handel the estimation of the ticket.
+   *  1. Try to get the estimate with the current token
+   *  2. If the estimate is received, return it
+   *  3. If the estimate is not received, try to renew the token
+   *  
+   *  The component that calls this function are triggered to perform a 
+   *  new estimation when the tokenExpiration state changes.
+   *  I prefer to explain at this point the reason for this choice:
+   *    1. component calls handleEstimation (they can as tokenExpiration is false)
+   *    2. handleEstimation fails due to the token expiration -> sets the tokenExpiration state to true
+   *    3. component condition tokenExpiration == false is not satisfied, so wait
+   *    4. through the useEffect (updateAuthToken, line 99) the token is renewed and the tokenExpiration is set to false
+   *    5. component calls handleEstimation (beacuse tokenExpiration is false) and get the estimation
+   */
+  async function handleEstimation(ticket) {
+    try {
+      //console.log("DEBUG: HandleEstimation with token", authToken, "and ticket");
+      const estimation = await API.getEstimation(authToken, ticket);
+      //console.log("DEBUG: The estimation ", estimation, "was received");
+      return estimation;
+    } catch (err) {
+      setTokenIsExpired(true);
+      console.log("DEBUG: The token", authToken, "is expired", err);
+      return null;
+    }
   }
-}
 
 
   return (
@@ -226,12 +243,12 @@ async function handleEstimation(ticket) {
           message={message} setMessage={setMessage} />} >
           <Route index element={<TableLayout ticketList={ticketList} setTicketList={setTicketList} answerATicket={answerATicket}
             handleErrors={handleErrors} user={user} dirty={dirty} setDirty={setDirty} loggedIn={loggedIn}
-            updateStateTicket={updateStateTicket} authToken={authToken} setAuthToken={setAuthToken} updateCategoryTicket={updateCategoryTicket} 
-            tokenIsExpired={tokenIsExpired} handleEstimation={handleEstimation} message={message} setMessage={setMessage} 
-            />} />
+            updateStateTicket={updateStateTicket} authToken={authToken} setAuthToken={setAuthToken} updateCategoryTicket={updateCategoryTicket}
+            tokenIsExpired={tokenIsExpired} handleEstimation={handleEstimation} message={message} setMessage={setMessage}
+          />} />
           <Route path="add" element={loggedIn ? <AddLayout addTicket={addTicket} user={user} authToken={authToken}
             setAuthToken={setAuthToken} tokenIsExpired={tokenIsExpired} setTokenIsExpired={setTokenIsExpired}
-            handleEstimation={handleEstimation} message={message} setMessage={setMessage}/> : <Navigate replace to='/login' />} />
+            handleEstimation={handleEstimation} message={message} setMessage={setMessage} /> : <Navigate replace to='/login' />} />
           <Route path='*' element={<NotFoundLayout />} />
         </Route>
         <Route path="/login" element={!loggedIn ? <LoginLayout login={handleLogin} /> : <Navigate replace to='/' />} />

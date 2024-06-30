@@ -15,7 +15,7 @@ const dayjs = require("dayjs");
 
 const jsonwebtoken = require('jsonwebtoken');
 const jwtSecret = '82eKgCw2bxTMCKbqhKzIIe1MdPs9QfiMdWx5xhi39beEaV82u8RNal9JaEeCdWUX';
-const expireTime = 10;
+const expireTime = 60;
 
 const userDao = require('./dao-users'); // module for accessing the user table in the DB
 const ticketDao = require('./dao-tickets'); // module for accessing the user table in the DB

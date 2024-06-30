@@ -4,9 +4,10 @@
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: this page manages the display of a list of tickets, manages errors and allows interactions with individual tickets based on authentication, such as: viewing replies to tickets, replying to tickets, changing the status or category through dedicated components.
+- Route `/add`: this page allows users to create new tickets. It manages two phases: filling out the form and a confirmation phase where the details entered for final approval are displayed including an estimate obtained through server 2
+- Route `/login`: this page manages user login through a form and redirects the user to the homepage on successful login or display an error message on failure. It also offers guest access without login.
+- Route `/*`: this page displays a message for invalid routes and offers a button to return to the main page.
 
 ## API Server
 - GET `/api/tickets`
@@ -275,13 +276,13 @@
 ## API Server2
 
 - POST `/api/ticket/estimation`: 
-  - **Description:** Returns an estimation of time required based on the title and category of a ticket.
+  - **Description:** Returns an estimation of time required based on the title and category of a ticket. Returns estimation in hours for admin and in days for user.
   - **Request Headers:** JWT token to verify user access.
   - **Request body:**
     ```json
     {
       "title": "Urgent server issue",
-      "category": "Technical Support"
+      "category": "maintenance"
     }
     ```
   - **Response body:**
@@ -290,7 +291,7 @@
       "estimation": 173,
     }
     ```
-  - **Status code:** `200 OK`, `400 Bad Request`, `401 Unauthorized`  
+  - **Status code:** `200 OK`,  `401 Unauthorized`, `422 Unprocessable Entity` (like validation)
 
 
 
@@ -307,15 +308,25 @@
 
 ## Main React Components
 
-- `ListOfSomething` (in `List.js`): component purpose and main functionality
-- `GreatButton` (in `GreatButton.js`): component purpose and main functionality
-- ...
+- `TableLayout` (in `Layout.jsx`): handles the ticket list fetch
+  - `TicketList` (in `TicketLibrary.jsx`): simply a list of `TicketItem`
+    - `TicketItem` (in `TicketLibrary.jsx`): this component manages individual tickets. It controls the visibility of ticket details, editing options, and response forms through states and incorporates conditional rendering to adapt to different user roles. Only if the owner is not an admin her a button to change the state from open to close is inserted.
+      - `TicketAnswer` (in `TicketDetail.jsx`): designed for users to submit responses to tickets, moreover it ensure that the component response is not empty before submitting. 
+      - `TicketDetail`(in `TicketDetail.jsx`): retrieves and displays answer (blocks) for a specific ticket. Once data is available, it displays the ticket answer in a styled list, including the content, author, and timestamp, providing a clean and informative presentation.
+      - `TicketEdit`(in `TicketEdit.jsx`): is designed for administrators to modify the state and category of a ticket. 
 
-(only _main_ components, minor ones may be skipped)
+- `AddLayout` (in `Layout.jsx`):
+  - `TicketForm` (in `TicketAdd.jsx`): designed for managing ticket submissions. It checks user inputs like title, category, description. Allow user to create tickets, review their details, and confirm their submissions, with options to edit or cancel as needed. Moreover the component leverages an effect hook to asynchronously calculate estimation times. 
+
+
+
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.png)
+![Screenshot](./img/screenHome.png)  
+
+![Screenshot](./img/screenAdd.png)
+
 
 ## Users Credentials
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Button, Alert, Col, Row, ButtonGroup} from 'react-bootstrap';
+import { Form, Button, Alert, Col, Row} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ function LoginForm(props) {
     <Row>
       <Col xs={4}></Col>
       <Col xs={4}>
-        <h1 className="pb-3">Login</h1>
+        <h1 className="fs-1 fw-bold mb-3">Login </h1>
 
         <Form onSubmit={handleSubmit}>
           {errorMessage? <Alert dismissible onClose={() => setErrorMessage('')} variant="danger">{errorMessage}</Alert> : null}
