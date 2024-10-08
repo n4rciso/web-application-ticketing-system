@@ -1,5 +1,5 @@
 # Web Application Exam: "Ticketing System"
-The project was developed according to the following (specifications)[https://docs.google.com/document/d/10BtpwfqA_vozQcmhLNQSK0DmmmAdqYcuIYAwb9cjpqQ/edit].
+The project was developed according to the following [https://docs.google.com/document/d/10BtpwfqA_vozQcmhLNQSK0DmmmAdqYcuIYAwb9cjpqQ/edit](specifications).
 
 ## Student: CARCAGNI' ANDREA
 
