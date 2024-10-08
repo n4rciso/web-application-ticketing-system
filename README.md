@@ -1,6 +1,7 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Y8bW3OQP)
-# Exam #1: "Ticketing System"
-## Student: s331618 CARCAGNI' ANDREA
+# Web Application Exam: "Ticketing System"
+The project was developed according to the following (specifications)[https://docs.google.com/document/d/10BtpwfqA_vozQcmhLNQSK0DmmmAdqYcuIYAwb9cjpqQ/edit].
+
+## Student: CARCAGNI' ANDREA
 
 ## React Client Application Routes
 
@@ -323,9 +324,9 @@
 
 ## Screenshot
 
-![Screenshot](./img/screenHome.png)  
+![Screenshot](./img/ScreenHome.png)  
 
-![Screenshot](./img/screenAdd.png)
+![Screenshot](./img/ScreenAdd.png)
 
 
 ## Users Credentials
